@@ -3,8 +3,8 @@ import subprocess
 import platform
 
 current_path = os.path.abspath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
-build_dir_path = os.path.abspath(os.path.join(current_path, '..', 'build'))
-games_dir_path = os.path.abspath(os.path.join(current_path, '..', 'game'))
+build_dir_path = os.path.abspath(os.path.join(current_path, '..', '.build'))
+games_dir_path = os.path.abspath(os.path.join(current_path, '..', 'application'))
 
 current_platform = platform.system()
 

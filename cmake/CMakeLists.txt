@@ -9,5 +9,5 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../.bin/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../.bin/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../.bin)
 
-add_subdirectory(../externals/glfw ../.externals/glfw)
-add_subdirectory(../application ../.application)
+add_subdirectory(../externals/glfw ../.build/externals/glfw)
+add_subdirectory(../application ../.build/application)
