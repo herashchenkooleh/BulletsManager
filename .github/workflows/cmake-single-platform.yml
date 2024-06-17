@@ -1,0 +1,26 @@
+name: C/C++ CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+      with: 
+        submodules: recursive
+
+    - name: generate game project
+      run: python scripts/generate_project.py
+    - name: build game project
+      run: python scripts/build_project.py
+    - uses: actions/upload-artifact@v4
+      with:
+        name: SpaceShip_Windows
+        path: ".bin"
