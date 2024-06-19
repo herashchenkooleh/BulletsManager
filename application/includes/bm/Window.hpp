@@ -18,6 +18,8 @@ namespace bm
 
 
         bool Create(const std::string& InTitle);
+        void Destroy();
+
         bool ShouldClose() const;
 
     private:

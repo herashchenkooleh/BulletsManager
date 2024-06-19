@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.24)
+cmake_minimum_required(VERSION 3.28.1)
 
 project(BulletsManager VERSION 0.0.1 LANGUAGES C CXX OBJC OBJCXX) 
 

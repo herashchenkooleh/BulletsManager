@@ -12,38 +12,48 @@ static void glfw_error_callback(int error, const char* description)
 
 namespace bm
 {
-	struct Window::Implementation
-	{
+	struct Window::Implementation {
 		GLFWwindow* m_GLFWWindow = nullptr;
+		bool m_Initialized = false;
 	};
 
 	Window::Window()
-		: m_Implementation(std::make_shared<Implementation>())
-	{
+		: m_Implementation(std::make_shared<Implementation>()) {
 	}
 
-	Window::~Window()
-	{
-    	glfwDestroyWindow(m_Implementation->m_GLFWWindow);
-    	glfwTerminate();
+	Window::~Window() {
+		Destroy();
 	}
 
 	bool Window::Create(const std::string& InTitle)
 	{
-		glfwSetErrorCallback(glfw_error_callback);
+		if (m_Implementation->m_Initialized) {
+			return m_Implementation->m_Initialized;
+		}
+
     	if (!glfwInit())
 		{
-			return false;
+			return m_Implementation->m_Initialized;
 		}
 
+		glfwSetErrorCallback(glfw_error_callback);
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
      	m_Implementation->m_GLFWWindow = glfwCreateWindow(1280, 720, InTitle.c_str(), nullptr, nullptr);
-    	if (m_Implementation->m_GLFWWindow == nullptr)
-		{
-			return false;
+    	m_Implementation->m_Initialized = !!m_Implementation->m_GLFWWindow;
+
+		return m_Implementation->m_Initialized;
+	}
+
+	void Window::Destroy() {
+		if (m_Implementation->m_GLFWWindow) {
+			glfwDestroyWindow(m_Implementation->m_GLFWWindow);
+			m_Implementation->m_GLFWWindow = nullptr;
 		}
 
-		return true;
+		if (m_Implementation->m_Initialized) {
+			glfwTerminate();
+		}
+		m_Implementation->m_Initialized = false;
 	}
 
 	bool Window::ShouldClose() const
