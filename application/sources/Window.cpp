@@ -1,5 +1,6 @@
 #define GLFW_INCLUDE_NONE
 #define GLFW_EXPOSE_NATIVE_COCOA
+#include <vulkan/vulkan.hpp>
 #include "GLFW/glfw3.h"
 #include "GLFW/glfw3native.h"
 
@@ -59,5 +60,9 @@ namespace bm
 	bool Window::ShouldClose() const
 	{
 		return glfwWindowShouldClose(m_Implementation->m_GLFWWindow);
+	}
+
+	Window::RenderTargetHandle Window::GetRenderTargetHandle() const {
+		return reinterpret_cast<void*>(m_Implementation->m_GLFWWindow);
 	}
 } // namespace CryptoStone::UI

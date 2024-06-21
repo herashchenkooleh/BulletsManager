@@ -1,15 +1,15 @@
 #pragma once
 
-#include "Renderer.hpp"
-
-#define VULKAN_HPP_NO_STRUCT_CONSTRUCTORS
-#include <vulkan/vulkan.hpp>
-
+#include "bm/Renderer.hpp"
+#include "bm/VulkanInstance.hpp"
+#include "bm/VulkanPhysicalDevice.hpp"
+#include "bm/VulkanLogicalDevice.hpp"
+#include "bm/VulkanWindowSurface.hpp"
 
 namespace bm {
     class VulkanRenderer : public Renderer {
     public:
-        VulkanRenderer();
+        VulkanRenderer(Window::Ptr InWindow);
         ~VulkanRenderer() override;
 
         bool Initialize() override;
@@ -18,23 +18,12 @@ namespace bm {
 
         [[nodiscard]] bool IsInitialized() const override { return mInitialized; }
 
-#ifdef DEBUG
-        static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT InMessageSeverity,
-            VkDebugUtilsMessageTypeFlagsEXT InMessageType,
-            const VkDebugUtilsMessengerCallbackDataEXT* InCallbackData,
-            void* InUserData);
-#endif
-
     private:
         bool mInitialized;
-
-        vk::ApplicationInfo mAppInfo;
-        vk::AllocationCallbacks mAllocCallbacks;
-        vk::Instance mInstance;
-        vk::InstanceCreateInfo mCreateInfo;
-
-#ifdef DEBUG
-        vk::DebugUtilsMessengerCreateInfoEXT mDebugCreateInfo;
-#endif
+        Window::Ptr mWindow;
+        VulkanInstance::Ptr mInstance;
+        VulkanPhysicalDevice::Ptr mPhysicalDevice;
+        VulkanLogicalDevice::Ptr mLogicalDevice;
+        VulkanWindowSurface::Ptr mSurface;
     };
 }

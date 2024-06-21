@@ -5,8 +5,9 @@
 #include "bm/Logger.hpp"
 
 namespace bm {
-    RenderSubSystem::RenderSubSystem()
-        : mRenderer(nullptr) {
+    RenderSubSystem::RenderSubSystem(Window::Ptr InWindow)
+        : mRenderer(nullptr)
+        , mWindow(InWindow) {
     }
 
     RenderSubSystem::~RenderSubSystem() /*override*/ = default;
@@ -15,7 +16,7 @@ namespace bm {
         if (!mRenderer) {
             decltype(auto) RenderApiName = Configs::GetInstance().Get<std::string>(Configs::sGlobalRenderApiName);
             if (RenderApiName == "vulkan") {
-                mRenderer = std::make_shared<VulkanRenderer>();
+                mRenderer = std::make_shared<VulkanRenderer>(mWindow);
             } else {
                 Logger::GetInstance().Fatal("Unsupported render api: %s", RenderApiName);
                 return false;

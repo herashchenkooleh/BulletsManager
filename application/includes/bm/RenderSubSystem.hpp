@@ -2,12 +2,12 @@
 
 #include "bm/EngineSubSystem.hpp"
 #include "bm/Renderer.hpp"
+#include "bm/Window.hpp"
 
 namespace bm {
     class RenderSubSystem : public EngineSubSystem {
     public:
-        RenderSubSystem();
-
+        RenderSubSystem(Window::Ptr InWindow);
         ~RenderSubSystem() override;
 
         bool Initialize() override;
@@ -19,5 +19,6 @@ namespace bm {
 
     private:
         Renderer::Ptr mRenderer;
+        Window::Ptr mWindow;
     };
 }

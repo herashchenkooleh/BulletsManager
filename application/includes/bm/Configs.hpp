@@ -13,6 +13,8 @@ namespace bm {
         static std::string sGlobalEngineVersion;
         static std::string sGlobalRenderApiName;
         static std::string sGlobalRenderApiVersion;
+        static std::string sGlobalRenderApiExtensions;
+        static std::string sGlobalRenderApiLayers;
 
         static Configs& GetInstance();
 

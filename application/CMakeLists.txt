@@ -18,6 +18,10 @@ set(sources_files ${CMAKE_CURRENT_SOURCE_DIR}/sources/Window.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/sources/RenderSubSystem.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/sources/Renderer.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/sources/VulkanRenderer.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/sources/VulkanInstance.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/sources/VulkanLogicalDevice.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/sources/VulkanPhysicalDevice.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/sources/VulkanWindowSurface.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/sources/Logger.cpp)
 source_group("Source Files\\application" FILES ${sources_files})
 
@@ -29,6 +33,10 @@ set(headers_files ${CMAKE_CURRENT_SOURCE_DIR}/includes/bm/MainLoop.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/includes/bm/RenderSubSystem.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/includes/bm/Renderer.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/includes/bm/VulkanRenderer.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/includes/bm/VulkanInstance.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/includes/bm/VulkanLogicalDevice.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/includes/bm/VulkanPhysicalDevice.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/includes/bm/VulkanWindowSurface.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/includes/bm/Logger.hpp)
 source_group("Header Files\\application" FILES ${headers_files})
 
@@ -37,8 +45,8 @@ source_group("Source Files\\" FILES ${main_cpp_file})
 
 add_executable(${PROJECT_NAME} ${main_cpp_file} ${sources_files} ${headers_files})
 
-set(CMAKE_C_FLAGS_DEBUG "-g -DDEBUG")
-set(CMAKE_CXX_FLAGS_DEBUG "-g -DDEBUG")
+set(CMAKE_C_FLAGS_DEBUG "-g -DDEBUG -DVULKAN_HPP_NO_STRUCT_CONSTRUCTORS")
+set(CMAKE_CXX_FLAGS_DEBUG "-g -DDEBUG -DVULKAN_HPP_NO_STRUCT_CONSTRUCTORS")
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE "-DLIBCXX_ENABLE_INCOMPLETE_FEATURES")
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/includes ${Vulkan_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})

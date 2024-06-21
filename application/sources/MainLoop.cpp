@@ -22,7 +22,7 @@ namespace bm {
 
         m_Window = InWindow;
 
-        Engine::GetInstance().RegisterSubSystem<RenderSubSystem>();
+        Engine::GetInstance().RegisterSubSystem<RenderSubSystem>(m_Window);
 
         if (!Engine::GetInstance().Initialize()) {
             Logger::GetInstance().Fatal("Failed initialize engine");
