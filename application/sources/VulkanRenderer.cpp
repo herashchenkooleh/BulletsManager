@@ -5,18 +5,18 @@ namespace bm {
         : mInitialized(false)
         , mWindow(InWindow)
         , mInstance(std::make_shared<VulkanInstance>())
-        , mPhysicalDevice(std::make_shared<VulkanPhysicalDevice>(mInstance))
-        , mLogicalDevice(std::make_shared<VulkanLogicalDevice>(mPhysicalDevice))
-        , mSurface(std::make_shared<VulkanWindowSurface>(mWindow, mInstance)) {
+        , mSurface(std::make_shared<VulkanWindowSurface>(mWindow, mInstance))
+        , mPhysicalDevice(std::make_shared<VulkanPhysicalDevice>(mInstance, mSurface))
+        , mLogicalDevice(std::make_shared<VulkanLogicalDevice>(mPhysicalDevice)) {
     }
 
     VulkanRenderer::~VulkanRenderer() /*override*/ = default;
 
     bool VulkanRenderer::Initialize() /*override*/ {
         mInitialized = mInstance->Initialize();
+        mInitialized = mInitialized && mSurface->Initialize();
         mInitialized = mInitialized && mPhysicalDevice->Initialize();
         mInitialized = mInitialized && mLogicalDevice->Initialize();
-        mInitialized = mInitialized && mSurface->Initialize();
 
         return mInitialized;
     }
@@ -28,6 +28,7 @@ namespace bm {
     void VulkanRenderer::Deinitialize() /*override*/ {
         mLogicalDevice->Deinitialize();
         mPhysicalDevice->Deinitialize();
+        mSurface->Deinitialize();
         mInstance->Deinitialize();
     }
 }

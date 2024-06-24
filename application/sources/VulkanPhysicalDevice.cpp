@@ -6,9 +6,10 @@
 #include <vulkan/vulkan_enums.hpp>
 
 namespace bm {
-    VulkanPhysicalDevice::VulkanPhysicalDevice(VulkanInstance::Ptr InInstance)
+    VulkanPhysicalDevice::VulkanPhysicalDevice(VulkanInstance::Ptr InInstance, VulkanWindowSurface::Ptr InSurface)
         : mInitialized(false)
-        , mInstance(InInstance) {
+        , mInstance(InInstance)
+        , mSurface(InSurface) {
 
     }
 
@@ -27,44 +28,6 @@ namespace bm {
                 mInitialized = true;
                 break;
             }
-        }
-
-        std::vector<vk::QueueFamilyProperties> QueueFamiliesProperties = mDevice.getQueueFamilyProperties();
-        std::uint32_t Index = 0;
-        for (auto& QueueFamilyProperties: QueueFamiliesProperties) {
-            if (QueueFamilyProperties.queueFlags & vk::QueueFlagBits::eGraphics) {
-                mQueueFamilies.insert({ vk::QueueFlagBits::eGraphics, { QueueFamilyProperties.queueFlags, QueueFamilyProperties.queueCount, Index } });
-            }
-
-            if (QueueFamilyProperties.queueFlags & vk::QueueFlagBits::eCompute) {
-                mQueueFamilies.insert({ vk::QueueFlagBits::eCompute, { QueueFamilyProperties.queueFlags, QueueFamilyProperties.queueCount, Index } });
-            }
-
-            if (QueueFamilyProperties.queueFlags & vk::QueueFlagBits::eProtected) {
-                mQueueFamilies.insert({ vk::QueueFlagBits::eProtected, { QueueFamilyProperties.queueFlags, QueueFamilyProperties.queueCount, Index } });
-            }
-
-            if (QueueFamilyProperties.queueFlags & vk::QueueFlagBits::eTransfer) {
-                mQueueFamilies.insert({ vk::QueueFlagBits::eTransfer, { QueueFamilyProperties.queueFlags, QueueFamilyProperties.queueCount, Index } });
-            }
-
-            if (QueueFamilyProperties.queueFlags & vk::QueueFlagBits::eSparseBinding) {
-                mQueueFamilies.insert({ vk::QueueFlagBits::eSparseBinding, { QueueFamilyProperties.queueFlags, QueueFamilyProperties.queueCount, Index } });
-            }
-
-            if (QueueFamilyProperties.queueFlags & vk::QueueFlagBits::eOpticalFlowNV) {
-                mQueueFamilies.insert({ vk::QueueFlagBits::eOpticalFlowNV, { QueueFamilyProperties.queueFlags, QueueFamilyProperties.queueCount, Index } });
-            }
-
-            if (QueueFamilyProperties.queueFlags & vk::QueueFlagBits::eVideoDecodeKHR) {
-                mQueueFamilies.insert({ vk::QueueFlagBits::eVideoDecodeKHR, { QueueFamilyProperties.queueFlags, QueueFamilyProperties.queueCount, Index } });
-            }
-
-            if (QueueFamilyProperties.queueFlags & vk::QueueFlagBits::eVideoEncodeKHR) {
-                mQueueFamilies.insert({ vk::QueueFlagBits::eVideoEncodeKHR, { QueueFamilyProperties.queueFlags, QueueFamilyProperties.queueCount, Index } });
-            }
-
-            Index++;
         }
 
         mDeviceFeatures = mDevice.getFeatures();
@@ -95,18 +58,22 @@ namespace bm {
         decltype(auto) Properties = InDevice.getProperties();
         if (Properties.deviceType == vk::PhysicalDeviceType::eDiscreteGpu ||
             Properties.deviceType == vk::PhysicalDeviceType::eIntegratedGpu) {
-            return true;
+
+            std::vector<vk::QueueFamilyProperties> QueueFamiliesProperties = InDevice.getQueueFamilyProperties();
+            std::uint32_t Index = 0;
+            for (auto& QueueFamilyProperties: QueueFamiliesProperties) {
+                if (QueueFamilyProperties.queueFlags & vk::QueueFlagBits::eGraphics) {
+                    vk::Bool32 PresentSupport = false;
+                    vk::Result Status = InDevice.getSurfaceSupportKHR(Index, mSurface->GetVulkanSurface(), &PresentSupport, mInstance->GetLoader());
+                    if (Status == vk::Result::eSuccess && PresentSupport) {
+                        mQueueFamilyIndex = Index;
+                        mQueueCount = QueueFamilyProperties.queueCount;
+                        return true;
+                    }
+                }
+            }
         }
 
         return false;
-    }
-
-    const VulkanPhysicalDevice::QueueFamily& VulkanPhysicalDevice::GetQueueFamily(const vk::QueueFlagBits& InFlags) const {
-        if (decltype(auto) Iter = mQueueFamilies.find(InFlags); Iter != mQueueFamilies.end()) {
-            return Iter->second;
-        }
-
-        static QueueFamily sEmptyQueueFamily {};
-        return sEmptyQueueFamily;
     }
 }

@@ -16,6 +16,8 @@ namespace bm {
         bool Initialize();
         void Deinitialize();
 
+        vk::SurfaceKHR& GetVulkanSurface() { return mSurface; }
+
     private:
         vk::SurfaceKHR mSurface;
         Window::Ptr mWindow;

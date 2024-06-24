@@ -22,8 +22,8 @@ namespace bm {
         bool mInitialized;
         Window::Ptr mWindow;
         VulkanInstance::Ptr mInstance;
+        VulkanWindowSurface::Ptr mSurface;
         VulkanPhysicalDevice::Ptr mPhysicalDevice;
         VulkanLogicalDevice::Ptr mLogicalDevice;
-        VulkanWindowSurface::Ptr mSurface;
     };
 }

@@ -17,13 +17,10 @@ namespace bm {
     VulkanLogicalDevice::~VulkanLogicalDevice() = default;
 
     bool VulkanLogicalDevice::Initialize() {
-        //TODO: add different queue families
-        decltype(auto) QueueFamily = mPhysDevice->GetQueueFamily(vk::QueueFlagBits::eGraphics);
-
         vk::DeviceQueueCreateInfo QueueCreateInfo = {
             .flags = vk::DeviceQueueCreateFlags { },
-            .queueFamilyIndex = QueueFamily.mIndex,
-            .queueCount = QueueFamily.mQueueCount,
+            .queueFamilyIndex = mPhysDevice->GetQueueFamilyIndex(),
+            .queueCount = mPhysDevice->GetQueueCount(),
             .pQueuePriorities = &mQueuePriority
         };
 
@@ -46,7 +43,7 @@ namespace bm {
             return false;
         }
 
-        mDevice.getQueue(QueueFamily.mIndex, 0, &mQueue, mPhysDevice->GetInstance()->GetLoader());
+        mDevice.getQueue(mPhysDevice->GetQueueFamilyIndex(), 0, &mQueue, mPhysDevice->GetInstance()->GetLoader());
         return true;
     }
 

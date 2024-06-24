@@ -16,6 +16,6 @@ namespace bm {
     }
 
     void VulkanWindowSurface::Deinitialize() {
-
+        mInstance->GetVulkanInstance().destroySurfaceKHR(mSurface);
     }
 }
